@@ -16,8 +16,20 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Build stage: TODO"
+                echo "Installing dependencies for ${APP_NAME}..."
+                sh 'npm ci'
+
+                echo "Building application..."
+                sh 'npm run build'
+
+                echo "Verifying build output..."
+                sh '''
+                    set -e
+                    test -d "${BUILD_DIR}" || { echo "ERROR: build directory not found"; exit 1; }
+                    echo "Build output verified."
+                '''
             }
+}
         }
 
         stage('Test') {
