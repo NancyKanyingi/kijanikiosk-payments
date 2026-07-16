@@ -1,2 +1,5 @@
 console.log("Running tests...");
-console.log("All tests passed.");
+
+console.error("Deliberate failure - CI pipeline proof");
+
+process.exit(1);

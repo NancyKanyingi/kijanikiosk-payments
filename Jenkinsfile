@@ -36,7 +36,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo "Test stage: TODO"
+                echo "Running test suite for ${APP_NAME}..."
+
+                sh '''
+                    set -e
+                    npm test
+                '''
             }
         }
 
