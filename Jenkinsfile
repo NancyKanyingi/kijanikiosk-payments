@@ -53,8 +53,6 @@ pipeline {
                     echo "Build output verified."
                 '''
                 
-                sh 'git rev-parse --short HEAD'
-            }
         }
 
         stage('Version') {
@@ -159,7 +157,7 @@ pipeline {
             }
         }  
     }
-          
+
 
     post {
 
