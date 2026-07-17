@@ -26,9 +26,23 @@ pipeline {
             steps {
                 echo "Installing dependencies..."
 
-                sh 'npm ci'
+                sh '''
+                set -eux
 
-                echo "Running ESLint..."
+                echo "Node version:"
+                node -v
+
+                echo "NPM version:"
+                npm -v
+
+                echo "Working directory:"
+                pwd
+
+                echo "Workspace contents:"
+                ls -la
+
+                npm ci
+                '''
 
                 sh 'npm run lint'
             }
