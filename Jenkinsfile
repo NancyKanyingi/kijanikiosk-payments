@@ -139,23 +139,25 @@ pipeline {
                         passwordVariable: 'NEXUS_PASS'
                     )
                 ]) {
-                    sh '''
-                    set -e
+                   sh '''
+                   set -eux
 
-                    echo "Publishing package to Nexus..."
+                   echo "Publishing package to Nexus..."
 
-                     cat > .npmrc <<EOF
-        registry=$NEXUS_URL
-        always-auth=true
-        //nexus:8081/repository/npm-kijanikiosk/:username=$NEXUS_USER
-        //nexus:8081/repository/npm-kijanikiosk/:_password=$(printf "%s" "$NEXUS_PASS" | base64 -w0)
-        //nexus:8081/repository/npm-kijanikiosk/:email=ci@example.com
-        EOF
+                   echo "registry=$NEXUS_URL" > .npmrc
+                   echo "always-auth=true" >> .npmrc
+                   echo "//nexus:8081/repository/npm-kijanikiosk/:username=$NEXUS_USER" >> .npmrc
+                   echo "//nexus:8081/repository/npm-kijanikiosk/:_password=$(printf "%s" "$NEXUS_PASS" | base64 -w0)" >> .npmrc
+                   echo "//nexus:8081/repository/npm-kijanikiosk/:email=ci@example.com" >> .npmrc
 
-                    npm publish --registry=$NEXUS_URL
+                   echo "===== .npmrc ====="
+                   cat .npmrc
 
-                    rm -f .npmrc
-                    '''
+                   echo "===== npm publish ====="
+                   npm publish --registry=$NEXUS_URL
+
+                   rm -f .npmrc
+                   ''' 
                 }
             }
         }  
