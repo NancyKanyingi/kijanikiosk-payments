@@ -52,7 +52,7 @@ pipeline {
                     }
                     echo "Build output verified."
                 '''
-                
+            }    
         }
 
         stage('Version') {
@@ -136,12 +136,12 @@ pipeline {
                         passwordVariable: 'NEXUS_PASS'
                     )
                 ]) {
-        sh '''
-        set -e
+                    sh '''
+                    set -e
 
-        echo "Publishing package to Nexus..."
+                    echo "Publishing package to Nexus..."
 
-        cat > .npmrc <<EOF
+                     cat > .npmrc <<EOF
         registry=$NEXUS_URL
         always-auth=true
         //nexus:8081/repository/npm-kijanikiosk/:username=$NEXUS_USER
@@ -149,10 +149,10 @@ pipeline {
         //nexus:8081/repository/npm-kijanikiosk/:email=ci@example.com
         EOF
 
-        npm publish --registry=$NEXUS_URL
+                    npm publish --registry=$NEXUS_URL
 
-        rm -f .npmrc
-        '''
+                    rm -f .npmrc
+                    '''
                 }
             }
         }  
