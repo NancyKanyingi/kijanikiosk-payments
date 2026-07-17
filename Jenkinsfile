@@ -57,6 +57,9 @@ pipeline {
 
         stage('Version') {
             steps {
+                sh '''
+                git config --global --add safe.directory "$WORKSPACE"
+                '''
                 script {
                     env.GIT_SHA = sh(
                         script: 'git rev-parse --short HEAD',
