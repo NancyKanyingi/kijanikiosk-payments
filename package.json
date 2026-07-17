@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-"scripts": {
-  "build": "node build.js",
-  "test": "node test.js",
-  "lint": "eslint ."
-},
+  "scripts": {
+    "build": "node build.js",
+    "test": "node test.js",
+    "lint": "eslint ."
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^10.7.0"
+  }
 }
