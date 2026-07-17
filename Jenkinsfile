@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18-alpine'
+        }
+    }
 
     environment {
         NODE_ENV  = 'test'
@@ -17,6 +21,9 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Installing dependencies for ${APP_NAME}..."
+                
+                sh 'node --version'
+
                 sh 'npm ci'
 
                 echo "Building application..."
