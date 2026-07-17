@@ -79,6 +79,18 @@ pipeline {
             }
         }
 
+        stage('Docker Build') {
+            steps {
+                echo "Building Docker image for ${APP_NAME}..."
+
+                sh """
+                    docker build -t ${APP_NAME}:${BUILD_NUMBER} .
+                """
+
+                echo "Docker image built successfully."
+            }
+        }
+
         stage('Archive') {
             steps {
                 echo "Archiving build artifact for ${APP_NAME} build ${BUILD_NUMBER}..."
