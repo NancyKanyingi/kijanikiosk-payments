@@ -10,6 +10,9 @@ pipeline {
         NODE_ENV  = 'test'
         BUILD_DIR = 'dist'
         APP_NAME  = 'kijanikiosk-payments'
+        
+        NEXUS_URL = 'http://nexus:8081/repository/npm-kijanikiosk/'
+
     }
 
     options {
@@ -103,8 +106,7 @@ pipeline {
                 echo "Artifact archived. Download from: ${BUILD_URL}artifact/"
             }
         }
-
-        stage('Credential Test') {
+        stage('Publish') {
             steps {
                 withCredentials([
                     usernamePassword(
@@ -113,25 +115,50 @@ pipeline {
                         passwordVariable: 'NEXUS_PASS'
                     )
                 ]) {
+
                     sh '''
-                        echo "User: $NEXUS_USER Pass: $NEXUS_PASS"
+                        set -e
+
+                        VERSION=$(node -p "require('./package.json').version")-$(git rev-parse --short HEAD)
+
+                        npm version "$VERSION" --no-git-tag-version
+
+                        cat > .npmrc <<EOF
+        registry=${NEXUS_URL}
+        always-auth=true
+        //nexus:8081/repository/npm-kijanikiosk/:username=$NEXUS_USER
+        //nexus:8081/repository/npm-kijanikiosk/:_password=$(printf "%s" "$NEXUS_PASS" | base64 -w0)
+        //nexus:8081/repository/npm-kijanikiosk/:email=dev@kijanikiosk.local
+        EOF
+
+                        npm publish
+
+                        rm -f .npmrc
                     '''
                 }
             }
         }
+  
     }
 
     post {
+
+        always {
+            junit allowEmptyResults: true, testResults: '**/test-results.xml'
+            cleanWs()
+        }
+
         success {
-            echo "Pipeline succeeded: ${APP_NAME} build ${BUILD_NUMBER}"
+            echo "Artifact published successfully."
+            echo "${BUILD_URL}artifact/"
         }
 
         failure {
-            echo "Pipeline FAILED: ${APP_NAME} build ${BUILD_NUMBER} - check logs"
+            echo "Pipeline failed."
         }
 
-        always {
-            echo "Build URL: ${BUILD_URL}"
+        changed {
+            echo "Build status changed."
         }
     }
 }
