@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'kijanikiosk-ci-agent:1.0'
+            args '-u root'
         }
     }
 
