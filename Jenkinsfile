@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'node:18-alpine'
+            image 'node:22-alpine'
         }
     }
 
@@ -31,7 +31,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                echo "Installing dependencies for ${APP_NAME}..."
+                echo "Preparing build for ${APP_NAME}..."
                 
                 sh 'node --version'
 
