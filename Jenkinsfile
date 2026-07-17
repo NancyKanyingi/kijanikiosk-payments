@@ -20,12 +20,13 @@ pipeline {
     stages {
         stage('Lint') {
             steps {
+                echo "Installing dependencies..."
+
+                sh 'npm ci'
+
                 echo "Running ESLint..."
 
-                sh '''
-                    set -e
-                    npm run lint
-                '''
+                sh 'npm run lint'
             }
         }
         stage('Build') {
@@ -34,7 +35,6 @@ pipeline {
                 
                 sh 'node --version'
 
-                sh 'npm ci'
 
                 echo "Building application..."
                 sh 'npm run build'
