@@ -18,6 +18,16 @@ pipeline {
     }
 
     stages {
+        stage('Lint') {
+            steps {
+                echo "Running ESLint..."
+
+                sh '''
+                    set -e
+                    npm run lint
+                '''
+            }
+        }
         stage('Build') {
             steps {
                 echo "Installing dependencies for ${APP_NAME}..."
@@ -41,14 +51,31 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                echo "Running test suite for ${APP_NAME}..."
+       stage('Verify') {
+            parallel {
 
-                sh '''
-                    set -e
-                    npm test
-                '''
+                stage('Test') {
+                    steps {
+                        echo "Running test suite for ${APP_NAME}..."
+
+                        sh '''
+                            set -e
+                            npm test
+                        '''
+                    }
+                }
+
+                stage('Security Audit') {
+                    steps {
+                        echo "Running npm security audit..."
+
+                        sh '''
+                            set -e
+                            npm audit --audit-level=high
+                        '''
+                    }
+                }
+
             }
         }
 
