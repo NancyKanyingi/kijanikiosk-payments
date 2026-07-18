@@ -41,21 +41,17 @@ pipeline {
                 echo "Workspace contents:"
                 ls -la
 
-                sh '''
-                set -eux
-
                 echo "Removing stale .npmrc..."
                 rm -f .npmrc
 
                 echo "Removing old package tarballs..."
                 rm -f *.tgz
 
-
                 npm ci || {
                     echo "===== npm debug log ====="
                     cat /root/.npm/_logs/*-debug-0.log || true
                     exit 1
-                    }
+                }
                 '''
 
                 sh 'npm run lint'
