@@ -28,31 +28,12 @@ pipeline {
                 echo "Installing dependencies..."
 
                 sh '''
-                set -eux
+                set -e
 
-                echo "Node version:"
-                node -v
-
-                echo "NPM version:"
-                npm -v
-
-                echo "Working directory:"
-                pwd
-
-                echo "Workspace contents:"
-                ls -la
-
-                echo "Removing stale .npmrc..."
                 rm -f .npmrc
-
-                echo "Removing old package tarballs..."
                 rm -f *.tgz
 
-                npm ci || {
-                    echo "===== npm debug log ====="
-                    cat /root/.npm/_logs/*-debug-0.log || true
-                    exit 1
-                }
+                npm ci
                 '''
 
                 sh 'npm run lint'
