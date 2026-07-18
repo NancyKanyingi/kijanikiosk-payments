@@ -47,7 +47,7 @@ pipeline {
 
 
                 echo "Building application..."
-                sh 'npm run build'
+                sh 'npm run buildd'
 
                 echo "Verifying build output..."
                 sh '''
