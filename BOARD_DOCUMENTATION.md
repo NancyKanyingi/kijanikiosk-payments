@@ -31,6 +31,7 @@ The pipeline then executes several stages that progressively increase confidence
 
 ---
 
+
 # From Code Commit to Published Artifact
 
 The process starts when a developer pushes changes to GitHub. Jenkins automatically checks out the latest version of the project and launches a Docker-based build agent. Running inside Docker guarantees that every build uses the same versions of Node.js, npm, and supporting tools.
@@ -84,3 +85,200 @@ The KijaniKiosk Payments CI pipeline provides a reliable and repeatable process 
 By combining Jenkins automation, Docker-based build environments, automated testing, dependency security auditing, artifact versioning, and Nexus Repository storage, the pipeline creates a controlled software delivery process where every published artifact has been consistently verified and can be traced back to its original source code.
 
 This approach improves software quality, increases developer productivity, and establishes a solid foundation for future continuous delivery and automated deployment practices.
+
+# Credential Audit
+
+A credential audit was performed on the final version of the CI pipeline.
+
+The audit confirmed that:
+
+- No usernames or passwords are hardcoded in the Jenkinsfile.
+- Nexus credentials are retrieved securely using Jenkins Credentials Manager via the `withCredentials` step.
+- A search of the Git repository found no hardcoded passwords, API keys, tokens, or secrets.
+- Jenkins masks sensitive values during pipeline execution, preventing credentials from appearing in build logs.
+
+The audit demonstrates that the pipeline follows secure credential management practices by keeping sensitive information out of source control and build output.
+
+Below are the evidence to support my Audit Section:
+
+1. From Jenkinsfile Publish stage:
+   stage('Publish') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'nexus-credentials',
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS'
+                    ) 
+                ]) {
+2. Git commit history:
+
+nancy@nancy-HP-EliteBook-840-G3:~/Development/code/dev14/kijanikiosk-payments$ git log --oneline
+4e452af (HEAD -> main, origin/main) Add board documentation for CI pipeline
+9b41aea fix(ci): restor publish stage
+368a7a4 test(ci): inject publish stage failure
+13ce613 fix(ci): restor test stage
+c3807c6 test(ci): inject test stage failure
+68e6c93 fix(ci): restor version stage
+9e59253 test(ci): inject version stage failure
+2534a10 fix(ci): restor build stage
+b02227e test(ci): inject build stage failure
+bbfba4d fix(ci): restore lint stage
+dcbcb06 test(ci): inject lint stage failure
+1852849 refactor(ci): remove temporary pipeline debugging
+7e334d9 fix(ci): attach Jenkins agent to shared Docker network
+0a02863 fix(ci): correct lint stage shell script syntax
+4383ee7 chore(ci): remove stale npm config before dependency install
+90a1547 chore(ci): print npm debug log on install failure
+f8db26b chore(ci): add Node and npm diagnostics to pipeline
+eed54ec chore(ci): add debug logging for Nexus npm publish
+43dba3c Allow Git access in Jenkins workspace
+533dfe7 Fix missing brace in Build stage
+ca70093 Add git to CI image and prepare Nexus publish
+1ba712f Fix stages block in Jenkinsfile
+cc00bc0 Add versioning and Nexus publish stage
+6a90d2a Prepare package version for CI publishing
+da98729 Add Nexus publish stage
+9ff2c11 Run Jenkins Docker agent as root
+1891a06 Add Docker configuration files
+ebfa449 Use custom Jenkins CI agent with Docker CLI
+9406960 Add Docker image build stage to Jenkins pipeline
+163d8ee Add start command for container deployment
+23d4fe2 Upgrade CI runtime to Node 22 and clean build stage
+62e6d05 Install dependencies before linting
+ce28337 Add ESLint dependency
+acfd317 Ignore build artifacts and npm configuration
+7e442b0 Add lint stage and parallel verify stage
+8b7eb99 feat: run pipeline in Docker agent
+48c9988 test: verify Jenkins credential masking
+4954cb2 Add artifact archiving stage
+edc8344 test: remove deliberate failure test - CI pipeline verified
+e3c60ef test: deliberate failure to verify CI pipeline stops on failure
+3668f9e fix: clean Jenkinsfile
+fecfdce fix: correct Jenkinsfile syntax
+
+3. Audit Commands:
+
+nancy@nancy-HP-EliteBook-840-G3:~/Development/code/dev14/kijanikiosk-payments$ git grep -n "password"
+Jenkinsfile:145:                        passwordVariable: 'NEXUS_PASS'
+Jenkinsfile:156:                   echo "//nexus:8081/repository/npm-kijanikiosk/:_password=$(printf "%s" "$NEXUS_PASS" | base64 -w0)" >> .npmrc
+nancy@nancy-HP-EliteBook-840-G3:~/Development/code/dev14/kijanikiosk-payments$ git grep -n "NEXUS_PASS"
+Jenkinsfile:145:                        passwordVariable: 'NEXUS_PASS'
+Jenkinsfile:156:                   echo "//nexus:8081/repository/npm-kijanikiosk/:_password=$(printf "%s" "$NEXUS_PASS" | base64 -w0)" >> .npmrc
+nancy@nancy-HP-EliteBook-840-G3:~/Development/code/dev14/kijanikiosk-payments$ git grep -n "secret"
+nancy@nancy-HP-EliteBook-840-G3:~/Development/code/dev14/kijanikiosk-payments$ git grep -n "token"
+git grep -n "apikey"
+git grep -n "admin"
+nancy@nancy-HP-EliteBook-840-G3:~/Development/code/dev14/kijanikiosk-payments$ touch CREDENTIAL_AUDIT.md
+nancy@nancy-HP-EliteBook-840-G3:~/Development/code/dev14/kijanikiosk-payments$ 
+
+4. Masking password console log output from the pipeline:
+
+Masking supported pattern matches of $NEXUS_PASS
+[Pipeline] {
+[Pipeline] sh
++ set -eux
++ echo 'Publishing package to Nexus...'
+Publishing package to Nexus...
++ echo 'registry=http://nexus:8081/repository/npm-kijanikiosk/'
++ echo 'always-auth=true'
++ echo '//nexus:8081/repository/npm-kijanikiosk/:username=admin'
++ printf '%s' ****
++ base64 -w0
++ echo '//nexus:8081/repository/npm-kijanikiosk/:_password=****'
++ echo '//nexus:8081/repository/npm-kijanikiosk/:email=ci@example.com'
++ echo '===== .npmrc ====='
+===== .npmrc =====
+
+
+# Credential Audit
+
+A credential audit was performed on the final version of the CI pipeline.
+
+The audit confirmed that:
+
+- No usernames or passwords are hardcoded in the Jenkinsfile.
+- Nexus credentials are retrieved securely using Jenkins Credentials Manager via the `withCredentials` step.
+- A search of the Git repository found no hardcoded passwords, API keys, tokens, or secrets.
+- Jenkins masks sensitive values during pipeline execution, preventing credentials from appearing in build logs.
+
+The audit demonstrates that the pipeline follows secure credential management practices by keeping sensitive information out of source control and build output.
+
+# Requirement 3 – Failure Injection Evidence
+
+The following screenshots provide evidence of the deliberate failure injection tests performed on the Jenkins CI pipeline. Each failure was introduced intentionally to verify that Jenkins stops the pipeline at the failing stage and prevents downstream stages from executing. After each test, the original command was restored and the pipeline completed successfully.
+
+---
+
+## 1. Lint Stage Failure
+
+**Fault Injected:** Changed `npm run lint` to `npm run linttt`.
+
+**Result:** The Lint stage failed immediately, and all subsequent stages were skipped.
+
+**Evidence:**
+
+![Lint Stage Failure](file:///home/nancy/Pictures/Screenshots/Screenshot%20From%202026-07-18%2013-18-26.png)
+
+---
+
+## 2. Build Stage Failure
+
+**Fault Injected:** Changed `npm run build` to `npm run buildd`.
+
+**Result:** The Build stage failed, preventing the Version, Verify, Docker Build, Archive, and Publish stages from executing.
+
+**Evidence:**
+
+![Build Stage Failure](file:///home/nancy/Pictures/Screenshots/Screenshot%20From%202026-07-18%2013-26-27.png)
+
+---
+
+## 3. Version Stage Failure
+
+**Fault Injected:** Changed `npm pack` to `npm packk`.
+
+**Result:** The Version stage failed because `packk` is not a valid npm command. The remaining stages were skipped.
+
+**Evidence:**
+
+![Version Stage Failure](file:///home/nancy/Pictures/Screenshots/Screenshot%20From%202026-07-18%2015-47-13.png)
+
+---
+
+## 4. Test Stage Failure
+
+**Fault Injected:** Changed `npm test` to `npm testt`.
+
+**Result:** The Test stage failed, preventing Docker Build, Archive, and Publish from running.
+
+**Evidence:**
+
+![Test Stage Failure](file:///home/nancy/Pictures/Screenshots/Screenshot%20From%202026-07-18%2015-48-54.png)
+
+---
+
+## 5. Publish Stage Failure
+
+**Fault Injected:** Changed `npm publish` to `npm publishh`.
+
+**Result:** All previous stages completed successfully, but the Publish stage failed because the modified command does not exist.
+
+**Evidence:**
+
+![Publish Stage Failure](file:///home/nancy/Pictures/Screenshots/Screenshot%20From%202026-07-18%2015-50-23.png)
+
+---
+
+## Recovery
+
+After each deliberate failure, the original command was restored:
+
+- `npm run linttt` → `npm run lint`
+- `npm run buildd` → `npm run build`
+- `npm packk` → `npm pack`
+- `npm testt` → `npm test`
+- `npm publishh` → `npm publish`
+
+Each restored pipeline completed successfully, demonstrating that the failures were isolated, intentional, and fully recoverable.
+
