@@ -93,7 +93,7 @@ pipeline {
 
                         sh '''
                             set -e
-                            npm testt
+                            npm test
                         '''
                     }
                 }
