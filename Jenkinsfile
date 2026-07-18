@@ -36,7 +36,7 @@ pipeline {
                 npm ci
                 '''
 
-                sh 'npm run linttt'
+                sh 'npm run lint'
             }
         }
         stage('Build') {
