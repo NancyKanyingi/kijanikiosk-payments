@@ -77,7 +77,7 @@ pipeline {
 
                 sh '''
                     npm version ${PACKAGE_VERSION} --no-git-tag-version
-                    npm pack
+                    npm packk
                 '''
 
                 echo "Publishing version ${PACKAGE_VERSION}"
