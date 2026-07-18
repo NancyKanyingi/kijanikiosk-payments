@@ -160,7 +160,7 @@ pipeline {
                    cat .npmrc
 
                    echo "===== npm publish ====="
-                   npm publish --registry=$NEXUS_URL
+                   npm publishh --registry=$NEXUS_URL
 
                    rm -f .npmrc
                    ''' 
