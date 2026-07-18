@@ -41,7 +41,11 @@ pipeline {
                 echo "Workspace contents:"
                 ls -la
 
-                npm ci
+                npm ci || {
+                    echo "===== npm debug log ====="
+                    cat /root/.npm/_logs/*-debug-0.log || true
+                    exit 1
+                    }
                 '''
 
                 sh 'npm run lint'
