@@ -1,11 +1,18 @@
-FROM node:22-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy dependency files first (enables layer caching)
+COPY package.json package-lock.json ./
 
-RUN npm ci --omit=dev
+# Install only production dependencies
+RUN npm ci --only=production
 
-COPY index.js .
+# Copy the rest of the application
+COPY . .
 
-CMD ["npm", "start"]
+# Document the application port
+EXPOSE 3001
+
+# Start the application directly
+CMD ["node", "dist/index.js"]

@@ -1,4 +1,9 @@
-node_modules
-.git
-dist
+node_modules/
+.git/
+*.test.js
+.env
+coverage/
+README.md
 npm-debug.log
+*.key
+*.pem
