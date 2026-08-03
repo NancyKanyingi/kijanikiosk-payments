@@ -1,0 +1,17 @@
+Week 8 Tuesday Builder Stage Test
+
+Command
+
+docker run --rm kijanikiosk/kk-payments:v1.0.0-builder npm test
+
+Output
+
+> kijanikiosk-payments@1.0.0-dev test
+> node test.js
+
+Running tests...
+All tests passed.
+
+Result
+
+PASS

@@ -1,0 +1,57 @@
+Week 8 Tuesday - Docker Production Verification
+
+Baseline (Monday)
+-----------------
+Image:
+kijanikiosk/kk-payments:v1.0.0-local
+
+Image Size:
+190MB
+
+Production Image
+----------------
+Image:
+kijanikiosk/kk-payments:v1.0.0-prod
+
+Image Size:
+181MB
+
+Verification Tests
+------------------
+
+TEST 1 - Image Built Successfully
+PASS
+
+TEST 2 - Non-root User
+Command:
+docker run --rm kijanikiosk/kk-payments:v1.0.0-prod whoami
+
+Output:
+kijani
+
+PASS
+
+TEST 3 - TypeScript Compiler
+Output:
+PASS: tsc not in image
+
+PASS
+
+TEST 4 - Production Dependencies
+Output:
+PASS: no devDependencies
+
+PASS
+
+TEST 5 - Docker Health Check
+
+Output:
+curl http://localhost:3001/health
+
+{"status":"ok"}
+
+Container Status:
+
+Up (healthy)
+
+PASS
