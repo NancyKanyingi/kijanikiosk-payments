@@ -1,0 +1,18 @@
+Docker Image
+
+docker.io/nancykanyingi/kk-payments:1.0.0-dev-e35a4fb
+
+Successfully pushed to Docker Hub.
+
+ImagePullSecret
+
+Name:
+kijani-registry-credentials
+
+Verification:
+
+kubectl get secret kijani-registry-credentials
+
+Result:
+
+kijani-registry-credentials

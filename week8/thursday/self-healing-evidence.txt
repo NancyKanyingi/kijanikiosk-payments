@@ -1,0 +1,14 @@
+T0: 22:16:18
+NAME                           READY   STATUS    RESTARTS   AGE
+kk-payments-695fc5bc49-c7fqc   1/1     Running   0          6m49s
+kk-payments-695fc5bc49-xjrv7   1/1     Running   0          57m
+kk-payments-695fc5bc49-c7fqc   1/1     Terminating   0          7m5s
+kk-payments-695fc5bc49-c7fqc   1/1     Terminating   0          7m5s
+kk-payments-695fc5bc49-wh87w   0/1     Pending       0          0s
+kk-payments-695fc5bc49-wh87w   0/1     Pending       0          0s
+kk-payments-695fc5bc49-wh87w   0/1     ContainerCreating   0          0s
+kk-payments-695fc5bc49-wh87w   1/1     Running             0          2s
+kk-payments-695fc5bc49-c7fqc   0/1     Error               0          7m36s
+kk-payments-695fc5bc49-c7fqc   0/1     Error               0          7m36s
+kk-payments-695fc5bc49-c7fqc   0/1     Error               0          7m36s
+T1: 22:17:33

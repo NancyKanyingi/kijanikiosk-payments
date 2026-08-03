@@ -1,0 +1,99 @@
+===== kubectl get all =====
+NAME                               READY   STATUS    RESTARTS   AGE
+pod/kk-payments-695fc5bc49-hgscb   1/1     Running   0          44m
+pod/kk-payments-695fc5bc49-xjrv7   1/1     Running   0          44m
+
+NAME                          TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/kk-payments-service   NodePort   10.106.145.160   <none>        3001:30001/TCP   25m
+
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/kk-payments   2/2     2            2           44m
+
+NAME                                     DESIRED   CURRENT   READY   AGE
+replicaset.apps/kk-payments-695fc5bc49   2         2         2       44m
+
+===== Deployment =====
+Name:                   kk-payments
+Namespace:              default
+CreationTimestamp:      Mon, 03 Aug 2026 21:19:00 +0300
+Labels:                 app=kk-payments
+                        week=8
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=kk-payments
+Replicas:               2 desired | 2 updated | 2 total | 2 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=kk-payments
+           version=1.0.0
+  Containers:
+   kk-payments:
+    Image:      docker.io/nancykanyingi/kk-payments:1.0.0-dev-e35a4fb
+    Port:       3001/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:     500m
+      memory:  256Mi
+    Requests:
+      cpu:     100m
+      memory:  64Mi
+    Environment:
+      NODE_ENV:    production
+      PORT:        3001
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   kk-payments-695fc5bc49 (2/2 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  44m   deployment-controller  Scaled up replica set kk-payments-695fc5bc49 from 0 to 2
+
+===== Logs =====
+=== pod/kk-payments-695fc5bc49-hgscb ===
+KijaniKiosk Payments Service listening on 3001
+=== pod/kk-payments-695fc5bc49-xjrv7 ===
+KijaniKiosk Payments Service listening on 3001
+
+===== Exec =====
+whoami
+kijani
+
+node version
+v18.20.8
+
+localhost health
+{"status":"ok"}
+===== Events =====
+LAST SEEN   TYPE     REASON              OBJECT                              MESSAGE
+44m         Normal   Scheduled           pod/kk-payments-695fc5bc49-xjrv7    Successfully assigned default/kk-payments-695fc5bc49-xjrv7 to minikube
+44m         Normal   ScalingReplicaSet   deployment/kk-payments              Scaled up replica set kk-payments-695fc5bc49 from 0 to 2
+44m         Normal   SuccessfulCreate    replicaset/kk-payments-695fc5bc49   Created pod: kk-payments-695fc5bc49-hgscb
+44m         Normal   SuccessfulCreate    replicaset/kk-payments-695fc5bc49   Created pod: kk-payments-695fc5bc49-xjrv7
+44m         Normal   Scheduled           pod/kk-payments-695fc5bc49-hgscb    Successfully assigned default/kk-payments-695fc5bc49-hgscb to minikube
+44m         Normal   Pulling             pod/kk-payments-695fc5bc49-hgscb    Pulling image "docker.io/nancykanyingi/kk-payments:1.0.0-dev-e35a4fb"
+44m         Normal   Pulling             pod/kk-payments-695fc5bc49-xjrv7    Pulling image "docker.io/nancykanyingi/kk-payments:1.0.0-dev-e35a4fb"
+44m         Normal   Created             pod/kk-payments-695fc5bc49-xjrv7    Container created
+44m         Normal   Pulled              pod/kk-payments-695fc5bc49-xjrv7    Successfully pulled image "docker.io/nancykanyingi/kk-payments:1.0.0-dev-e35a4fb" in 16.27s (16.27s including waiting). Image size: 127060887 bytes.
+44m         Normal   Started             pod/kk-payments-695fc5bc49-xjrv7    Container started
+44m         Normal   Created             pod/kk-payments-695fc5bc49-hgscb    Container created
+44m         Normal   Started             pod/kk-payments-695fc5bc49-hgscb    Container started
+44m         Normal   Pulled              pod/kk-payments-695fc5bc49-hgscb    Successfully pulled image "docker.io/nancykanyingi/kk-payments:1.0.0-dev-e35a4fb" in 2.429s (18.694s including waiting). Image size: 127060887 bytes.
+24m         Normal   Scheduled           pod/curl-test                       Successfully assigned default/curl-test to minikube
+24m         Normal   Pulling             pod/curl-test                       Pulling image "curlimages/curl"
+24m         Normal   Started             pod/curl-test                       Container started
+24m         Normal   Created             pod/curl-test                       Container created
+24m         Normal   Pulled              pod/curl-test                       Successfully pulled image "curlimages/curl" in 11.212s (11.212s including waiting). Image size: 23799160 bytes.
+
+===== Resource Usage =====
+NAME                           CPU(cores)   MEMORY(bytes)   
+kk-payments-695fc5bc49-hgscb   1m           33Mi            
+kk-payments-695fc5bc49-xjrv7   1m           12Mi            
