@@ -1,43 +1,33 @@
-NodePort Verification
+Service Verification
 
-Service:
-kk-payments-service
+kubectl get service kk-payments-service
 
-NodePort:
-30001
+NAME                  TYPE       CLUSTER-IP       PORT(S)
+kk-payments-service   NodePort   10.106.145.160   3001:30001/TCP
 
-Internal DNS Verification
+kubectl get endpoints kk-payments-service
 
-Command:
+10.244.0.3:3001
+10.244.0.4:3001
 
-kubectl run curl-test \
-  --image=curlimages/curl \
-  --rm -it \
-  --restart=Never -- \
-  curl http://kk-payments-service.default.svc.cluster.local:3001/health
+Internal DNS verification
 
-Output:
+kubectl run curl-test ...
+
+Response:
 
 {"status":"ok"}
 
-NodePort Verification
-
-minikube service kk-payments-service --url
-
-Output:
-
-http://192.168.49.2:30001
-
-Verification from inside Minikube:
+Minikube SSH verification
 
 curl http://localhost:30001/health
 
-Output:
+Response:
 
 {"status":"ok"}
 
 curl http://10.106.145.160:3001/health
 
-Output:
+Response:
 
 {"status":"ok"}
