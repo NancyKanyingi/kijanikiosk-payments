@@ -1,0 +1,59 @@
+===== Requirement 6 Evidence =====
+
+Build Command
+-------------
+docker build --no-cache \
+  -f Dockerfile.production \
+  -t kk-payments:req6 .
+
+Result
+------
+Build completed successfully.
+
+Production Image Size
+---------------------
+docker image inspect kk-payments:req6 --format='{{.Size}}'
+
+44948883 bytes (~44.95 MB)
+
+Requirement: Under 100 MB
+Status: PASS
+
+Runs as Non-root User
+---------------------
+docker run --rm --entrypoint whoami kk-payments:req6
+
+Output:
+kijani
+
+Status: PASS
+
+TypeScript Compiler Check
+-------------------------
+docker run --rm --entrypoint sh kk-payments:req6 -c "which tsc"
+
+Output:
+(no output)
+
+Status: PASS
+
+Health Check
+------------
+docker ps
+
+STATUS:
+Up (healthy)
+
+docker inspect --format='{{json .State.Health}}' req6-test
+
+Status:
+healthy
+
+Health endpoint returned:
+{"status":"ok"}
+
+Requirement satisfied: Container became healthy within 60 seconds.
+
+Overall Result
+--------------
+Requirement 6 completed successfully.
