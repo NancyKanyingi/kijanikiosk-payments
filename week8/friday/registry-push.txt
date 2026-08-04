@@ -1,0 +1,58 @@
+===== Requirement 7 Evidence =====
+
+Generated Version
+-----------------
+VERSION:
+1.0.0-dev
+
+Git SHA:
+f0ace0d
+
+Generated Tag:
+1.0.0-dev-f0ace0d
+
+Image Tagged
+------------
+docker tag kk-payments:req6 \
+nancykanyingi/kk-payments:1.0.0-dev-f0ace0d
+
+Status:
+PASS
+
+Image Push
+----------
+docker push nancykanyingi/kk-payments:1.0.0-dev-f0ace0d
+
+Result:
+Push completed successfully.
+
+Registry Digest:
+sha256:eb3d3320ab0ca92a58bea804627da166541d9f56ee83c1ae4fd15170e3051092
+
+Delete Local Image
+------------------
+docker rmi kk-payments:req6
+docker rmi nancykanyingi/kk-payments:1.0.0-dev-f0ace0d
+
+Result:
+Image removed successfully.
+
+Pull From Registry
+------------------
+docker pull nancykanyingi/kk-payments:1.0.0-dev-f0ace0d
+
+Result:
+Image downloaded successfully from Docker Hub.
+
+Verification
+------------
+docker run --rm --entrypoint whoami \
+nancykanyingi/kk-payments:1.0.0-dev-f0ace0d
+
+Output:
+kijani
+
+Conclusion
+----------
+Requirement 7 completed successfully.
+The registry is confirmed as the source of truth.
