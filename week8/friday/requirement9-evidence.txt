@@ -1,0 +1,13 @@
+===== Requirement 9 Verification =====
+Tue Aug  4 04:35:27 PM EAT 2026
+
+NodePort:
+{"status":"ok"}
+
+Endpoints:
+NAME                  ENDPOINTS                          AGE
+kk-payments-service   10.244.0.13:3001,10.244.0.9:3001   21m
+
+
+In-cluster DNS:
+{"status":"ok"}

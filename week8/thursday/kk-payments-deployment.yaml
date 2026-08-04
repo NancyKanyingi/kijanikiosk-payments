@@ -26,9 +26,7 @@ spec:
 
       containers:
       - name: kk-payments
-
-        image: docker.io/nancykanyingi/kk-payments:1.0.0-dev-e35a4fb
-
+        image: docker.io/nancykanyingi/kk-payments:1.0.0-dev-f0ace0d
         ports:
         - containerPort: 3001
 
