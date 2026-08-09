@@ -1,0 +1,36 @@
+=== PHASE 5: FINAL ROLLBACK VERIFICATION ===
+Sun Aug  9 04:25:24 PM EAT 2026
+
+=== DEPLOYMENT ===
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS    IMAGES                                       SELECTOR
+kk-payments   3/3     3            3           24h   kk-payments   docker.io/nancykanyingi/kk-payments:v1.1.0   app=kk-payments
+
+=== PODS ===
+NAME                           READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+kk-payments-54544b55fc-b6589   1/1     Running   0          23h     10.244.0.33   minikube   <none>           <none>
+kk-payments-54544b55fc-qjf44   1/1     Running   0          23h     10.244.0.34   minikube   <none>           <none>
+kk-payments-54544b55fc-r8rh9   1/1     Running   0          5m21s   10.244.0.44   minikube   <none>           <none>
+
+=== POD IMAGES ===
+POD                            IMAGE                                        READY   STATUS
+kk-payments-54544b55fc-b6589   docker.io/nancykanyingi/kk-payments:v1.1.0   true    Running
+kk-payments-54544b55fc-qjf44   docker.io/nancykanyingi/kk-payments:v1.1.0   true    Running
+kk-payments-54544b55fc-r8rh9   docker.io/nancykanyingi/kk-payments:v1.1.0   true    Running
+
+=== ROLLOUT STATUS ===
+deployment "kk-payments" successfully rolled out
+
+=== ROLLOUT HISTORY ===
+deployment.apps/kk-payments
+REVISION  CHANGE-CAUSE
+1         <none>
+2         Initial production-approaching deployment: v1.1.0
+4         Deliberate regression: v9.9.9-bad does not exist
+5         Initial production-approaching deployment: v1.1.0
+
+
+=== INGRESS PAYMENTS ROUTE AFTER ROLLBACK ===
+200
+
+=== INGRESS API ROUTE AFTER ROLLBACK ===
+200

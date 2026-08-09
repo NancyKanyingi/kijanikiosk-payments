@@ -1,0 +1,52 @@
+=== PHASE 3: kk-api VERIFICATION ===
+
+=== ROLLOUT STATUS ===
+deployment "kk-api" successfully rolled out
+
+=== DEPLOYMENT ===
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+kk-api   2/2     2            2           9m35s
+
+=== PODS ===
+NAME                      READY   STATUS    RESTARTS   AGE
+kk-api-85cd5ff494-f2vmw   1/1     Running   0          9m35s
+kk-api-85cd5ff494-nqkxd   1/1     Running   0          9m35s
+
+=== SERVICE ===
+NAME     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kk-api   ClusterIP   10.103.185.120   <none>        8080/TCP   9m35s
+
+=== IMAGE ===
+nginx:alpine
+
+=== ROLLING UPDATE STRATEGY ===
+maxSurge=1 maxUnavailable=0
+
+=== PROBES ===
+    Liveness:   http-get http://:80/ delay=10s timeout=1s period=20s #success=1 #failure=3
+    Readiness:  http-get http://:80/ delay=3s timeout=1s period=10s #success=1 #failure=3
+    Environment Variables from:
+      kk-api-config  ConfigMap  Optional: false
+    Environment:     <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-dvnd8 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+--
+    Liveness:   http-get http://:80/ delay=10s timeout=1s period=20s #success=1 #failure=3
+    Readiness:  http-get http://:80/ delay=3s timeout=1s period=10s #success=1 #failure=3
+    Environment Variables from:
+      kk-api-config  ConfigMap  Optional: false
+    Environment:     <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9pd7f (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+
+=== PAYMENTS SERVICE URL ===
+PAYMENTS_SERVICE_URL=http://kk-payments:3001
+
+=== RESOURCE CONFIGURATION ===
+requests.cpu=50m requests.memory=64Mi limits.cpu=250m limits.memory=128Mi

@@ -1,0 +1,66 @@
+==========================================
+KijaniKiosk Week 9 Project - Phase 2
+kk-payments Deployment and Service
+==========================================
+
+=== ROLLOUT STATUS ===
+deployment "kk-payments" successfully rolled out
+
+=== DEPLOYMENT ===
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+kk-payments   3/3     3            3           86m
+
+=== PODS ===
+NAME                           READY   STATUS    RESTARTS   AGE
+kk-payments-54544b55fc-b6589   1/1     Running   0          48m
+kk-payments-54544b55fc-nnkwr   1/1     Running   0          48m
+kk-payments-54544b55fc-qjf44   1/1     Running   0          48m
+
+=== SERVICE ===
+NAME          TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+kk-payments   ClusterIP   10.96.205.25   <none>        3001/TCP   66m
+
+=== IMAGE ===
+docker.io/nancykanyingi/kk-payments:v1.1.0
+
+=== ROLLING UPDATE STRATEGY ===
+maxSurge=1 maxUnavailable=1
+
+=== PROBES ===
+    Liveness:   http-get http://:3001/health delay=15s timeout=1s period=20s #success=1 #failure=3
+    Readiness:  http-get http://:3001/health delay=5s timeout=1s period=10s #success=1 #failure=3
+    Environment Variables from:
+      kk-payments-config   ConfigMap  Optional: false
+      kk-payments-secrets  Secret     Optional: false
+    Environment:           <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-sdpfn (ro)
+Conditions:
+  Type                        Status
+--
+    Liveness:   http-get http://:3001/health delay=15s timeout=1s period=20s #success=1 #failure=3
+    Readiness:  http-get http://:3001/health delay=5s timeout=1s period=10s #success=1 #failure=3
+    Environment Variables from:
+      kk-payments-config   ConfigMap  Optional: false
+      kk-payments-secrets  Secret     Optional: false
+    Environment:           <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-wmtct (ro)
+Conditions:
+  Type                        Status
+--
+    Liveness:   http-get http://:3001/health delay=15s timeout=1s period=20s #success=1 #failure=3
+    Readiness:  http-get http://:3001/health delay=5s timeout=1s period=10s #success=1 #failure=3
+    Environment Variables from:
+      kk-payments-config   ConfigMap  Optional: false
+      kk-payments-secrets  Secret     Optional: false
+    Environment:           <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-l7z9b (ro)
+Conditions:
+  Type                        Status
+
+=== CONFIGMAP ENVIRONMENT ===
+NODE_ENV=production
+DB_HOST=postgres
+LOG_LEVEL=info

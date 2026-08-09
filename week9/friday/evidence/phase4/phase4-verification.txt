@@ -1,0 +1,55 @@
+=== PHASE 4: INGRESS VERIFICATION ===
+Sun Aug  9 03:58:08 PM EAT 2026
+
+=== INGRESS ===
+NAME             CLASS   HOSTS          ADDRESS        PORTS   AGE
+kijani-ingress   nginx   kijani.local   192.168.49.2   80      46m
+
+=== INGRESS DESCRIPTION ===
+Name:             kijani-ingress
+Labels:           <none>
+Namespace:        kijani-project
+Address:          192.168.49.2
+Ingress Class:    nginx
+Default backend:  <default>
+Rules:
+  Host          Path  Backends
+  ----          ----  --------
+  kijani.local
+                /payments   kk-payments:3001 (10.244.0.34:3001,10.244.0.33:3001,10.244.0.35:3001)
+                /api        kk-api:8080 (10.244.0.37:80,10.244.0.36:80)
+Annotations:    nginx.ingress.kubernetes.io/rewrite-target: /
+Events:
+  Type    Reason  Age                  From                      Message
+  ----    ------  ----                 ----                      -------
+  Normal  Sync    2m52s (x3 over 40m)  nginx-ingress-controller  Scheduled for sync
+
+=== SERVICES ===
+NAME          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kk-api        ClusterIP   10.103.185.120   <none>        8080/TCP   118m
+kk-payments   ClusterIP   10.96.205.25     <none>        3001/TCP   23h
+
+=== ENDPOINTS ===
+NAME          ENDPOINTS                                            AGE
+kk-api        10.244.0.36:80,10.244.0.37:80                        118m
+kk-payments   10.244.0.33:3001,10.244.0.34:3001,10.244.0.35:3001   23h
+
+=== PAYMENTS PODS ===
+NAME                           READY   STATUS    RESTARTS   AGE
+kk-payments-54544b55fc-b6589   1/1     Running   0          23h
+kk-payments-54544b55fc-nnkwr   1/1     Running   0          23h
+kk-payments-54544b55fc-qjf44   1/1     Running   0          23h
+
+=== API PODS ===
+NAME                      READY   STATUS    RESTARTS   AGE
+kk-api-85cd5ff494-f2vmw   1/1     Running   0          118m
+kk-api-85cd5ff494-nqkxd   1/1     Running   0          118m
+
+=== HOST RESOLUTION ===
+192.168.49.2    kijani.local
+
+=== PAYMENTS ROUTE ===
+200
+
+=== API ROUTE ===
+200

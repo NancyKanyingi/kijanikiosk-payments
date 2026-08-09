@@ -1,0 +1,39 @@
+=== PHASE 5: STALLED ROLLOUT EVIDENCE ===
+Sun Aug  9 04:17:59 PM EAT 2026
+
+=== DEPLOYMENT ===
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS    IMAGES                                           SELECTOR
+kk-payments   2/3     2            2           24h   kk-payments   docker.io/nancykanyingi/kk-payments:v9.9.9-bad   app=kk-payments
+
+=== PODS ===
+NAME                           READY   STATUS             RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+kk-payments-54544b55fc-b6589   1/1     Running            0          23h     10.244.0.33   minikube   <none>           <none>
+kk-payments-54544b55fc-qjf44   1/1     Running            0          23h     10.244.0.34   minikube   <none>           <none>
+kk-payments-688df9dcf4-8kr7x   0/1     ImagePullBackOff   0          3m19s   10.244.0.43   minikube   <none>           <none>
+kk-payments-688df9dcf4-lcm4t   0/1     ImagePullBackOff   0          3m19s   10.244.0.42   minikube   <none>           <none>
+
+=== POD IMAGES ===
+POD                            IMAGE                                            READY   PHASE
+kk-payments-54544b55fc-b6589   docker.io/nancykanyingi/kk-payments:v1.1.0       true    Running
+kk-payments-54544b55fc-qjf44   docker.io/nancykanyingi/kk-payments:v1.1.0       true    Running
+kk-payments-688df9dcf4-8kr7x   docker.io/nancykanyingi/kk-payments:v9.9.9-bad   false   Pending
+kk-payments-688df9dcf4-lcm4t   docker.io/nancykanyingi/kk-payments:v9.9.9-bad   false   Pending
+
+=== REPLICASETS ===
+NAME                     DESIRED   CURRENT   READY   AGE
+kk-payments-54544b55fc   2         2         2       23h
+kk-payments-688df9dcf4   2         2         0       3m19s
+kk-payments-84cd9f7dfb   0         0         0       23h
+kk-payments-99b974644    0         0         0       24h
+
+=== ROLLOUT HISTORY ===
+deployment.apps/kk-payments
+REVISION  CHANGE-CAUSE
+1         <none>
+2         Initial production-approaching deployment: v1.1.0
+3         Initial production-approaching deployment: v1.1.0
+4         Deliberate regression: v9.9.9-bad does not exist
+
+
+=== INGRESS PAYMENTS ROUTE DURING STALL ===
+200
