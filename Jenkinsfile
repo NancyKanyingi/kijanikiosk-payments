@@ -166,7 +166,35 @@ pipeline {
                    ''' 
                 }
             }
-        }  
+        } 
+
+        stage('Approve Production Deployment') {
+            steps {
+                input(
+                    message: "Deploy kk-payments:${BUILD_NUMBER} to production?",
+                    ok: "Deploy",
+                    submitter: "nancy",   // replace if your Jenkins username differs
+                    parameters: [
+                        text(
+                            name: "APPROVAL_REASON",
+                            description: "Reason for approval (required for audit trail)"
+                        )
+                    ]
+                )
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                echo "Deploying kk-payments build ${BUILD_NUMBER} to production..."
+
+                sh """
+                    sed -i 's|image:.*kk-payments.*|image: kijanikiosk/kk-payments:${BUILD_NUMBER}|' k8s/kk-payments-deployment.yaml
+                    kubectl apply -f k8s/kk-payments-deployment.yaml -n default
+                    kubectl rollout status deployment/kk-payments -n default
+                """
+            }
+        } 
     }
 
 
