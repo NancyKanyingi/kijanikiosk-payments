@@ -2,12 +2,12 @@ pipeline {
     agent {
         docker {
             image 'kijanikiosk-ci-agent:1.0'
-             args '''
-            -u root
-            --network kijanikiosk-net
-            -v /home/nancy/.kube:/root/.kube:ro
-            -v /home/nancy/.minikube:/root/.minikube:ro
-        '''
+            args '''
+                -u root
+                --network host
+                -v /home/nancy/.kube:/root/.kube:ro
+                -v /home/nancy/.minikube:/root/.minikube:ro
+                '''
         }
     }
 
