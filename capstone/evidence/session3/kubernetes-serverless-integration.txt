@@ -1,0 +1,9 @@
+=== Rollout Status ===
+deployment "kk-payments" successfully rolled out
+
+=== Receipt Environment Variables ===
+RECEIPT_EVENTS_ENABLED=true
+RECEIPT_BUCKET=kk-payments-receipts-staging
+
+=== S3 Endpoint ===
+S3_ENDPOINT=http://host.minikube.internal:4569

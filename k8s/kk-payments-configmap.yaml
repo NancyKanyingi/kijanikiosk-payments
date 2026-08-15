@@ -10,3 +10,7 @@ data:
   LOG_LEVEL: info
   MAX_CONNECTIONS: "10"
   NODE_ENV: production
+ 
+  RECEIPT_BUCKET: kk-payments-receipts-staging
+  S3_ENDPOINT: http://host.minikube.internal:4569
+  RECEIPT_EVENTS_ENABLED: "true"
