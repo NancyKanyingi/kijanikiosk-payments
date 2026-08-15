@@ -177,7 +177,7 @@ pipeline {
                     sh '''
                         set -e
 
-                        npm install
+                        npm ci --legacy-peer-deps
 
                         npx serverless print \
                         --stage staging \
