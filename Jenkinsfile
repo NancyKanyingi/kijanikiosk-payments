@@ -238,8 +238,7 @@ pipeline {
             export KUBECONFIG=/tmp/kube/config
 
             # Update deployment image
-            sed -i 's|image:.*kk-payments.*|image: kijanikiosk/kk-payments:${BUILD_NUMBER}|' k8s/kk-payments-deployment.yaml
-
+            sed -i 's|image:.*kk-payments.*|image: docker.io/nancykanyingi/kk-payments:v1.1.0|' k8s/kk-payments-deployment.yaml
             kubectl apply -f k8s/kk-payments-deployment.yaml -n kijani-project
             kubectl rollout status deployment/kk-payments -n kijani-project
         """
