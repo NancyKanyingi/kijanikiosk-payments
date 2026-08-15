@@ -17,7 +17,6 @@ pipeline {
     }
 
     options {
-        timeout(time: 15, unit: 'MINUTES')
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
     }
@@ -160,29 +159,42 @@ pipeline {
                    cat .npmrc
 
                    echo "===== npm publish ====="
-                   npm publish --registry=$NEXUS_URL
+                   npm publish --registry=$NEXUS_URL || {
+                     echo "Package already exists in Nexus. Skipping Publish."
+                   }
 
                    rm -f .npmrc
                    ''' 
                 }
             }
         } 
-
+        
         stage('Approve Production Deployment') {
+            options {
+                timeout(time: 15, unit: 'MINUTES')
+            }
+
             steps {
+                echo "======================================"
+                echo "WAITING FOR PRODUCTION APPROVAL"
+                echo "Open the running build page in Jenkins"
+                echo "Click the 'Proceed' button"
+                echo "======================================"
+
                 input(
                     message: "Deploy kk-payments:${BUILD_NUMBER} to production?",
-                    ok: "Deploy",
-                    submitter: "nancy",   // replace if your Jenkins username differs
+                    ok: "Proceed",
+                    submitter: "nancy",
                     parameters: [
                         text(
                             name: "APPROVAL_REASON",
-                            description: "Reason for approval (required for audit trail)"
+                            description: "Reason for approval (required)"
                         )
                     ]
                 )
             }
         }
+        
 
         stage('Deploy to Production') {
             steps {
@@ -190,8 +202,8 @@ pipeline {
 
                 sh """
                     sed -i 's|image:.*kk-payments.*|image: kijanikiosk/kk-payments:${BUILD_NUMBER}|' k8s/kk-payments-deployment.yaml
-                    kubectl apply -f k8s/kk-payments-deployment.yaml -n default
-                    kubectl rollout status deployment/kk-payments -n default
+                    kubectl apply -f k8s/kk-payments-deployment.yaml -n kijani-project
+                    kubectl rollout status deployment/kk-payments -n kijani-project
                 """
             }
         } 
