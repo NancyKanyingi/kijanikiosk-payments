@@ -224,14 +224,25 @@ pipeline {
         
 
         stage('Deploy to Production') {
-            steps {
-                echo "Deploying kk-payments build ${BUILD_NUMBER} to production..."
+                    steps {
+                        echo "Deploying kk-payments build ${BUILD_NUMBER} to production..."
 
-                sh """
-                    sed -i 's|image:.*kk-payments.*|image: kijanikiosk/kk-payments:${BUILD_NUMBER}|' k8s/kk-payments-deployment.yaml
-                    kubectl apply -f k8s/kk-payments-deployment.yaml -n kijani-project
-                    kubectl rollout status deployment/kk-payments -n kijani-project
-                """
+                    sh """
+            # Create a writable kubeconfig for the agent
+            mkdir -p /tmp/kube
+            cp /root/.kube/config /tmp/kube/config
+
+            # Rewrite Minikube certificate paths for the Docker agent
+            sed -i 's|/home/nancy/.minikube|/root/.minikube|g' /tmp/kube/config
+
+            export KUBECONFIG=/tmp/kube/config
+
+            # Update deployment image
+            sed -i 's|image:.*kk-payments.*|image: kijanikiosk/kk-payments:${BUILD_NUMBER}|' k8s/kk-payments-deployment.yaml
+
+            kubectl apply -f k8s/kk-payments-deployment.yaml -n kijani-project
+            kubectl rollout status deployment/kk-payments -n kijani-project
+        """
             }
         } 
     }
