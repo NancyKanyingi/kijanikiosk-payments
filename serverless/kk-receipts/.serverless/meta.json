@@ -1,0 +1,65 @@
+{
+  "/home/nancy/kijani-serverless/kk-receipts/serverless.yml": {
+    "versionFramework": "4.41.0",
+    "servicePath": "/home/nancy/kijani-serverless/kk-receipts/serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "kijani-receipts",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs20.x",
+        "stage": "dev",
+        "region": "af-south-1",
+        "environment": {
+          "NODE_ENV": "development",
+          "DEFAULT_CURRENCY": "KES"
+        }
+      },
+      "functions": {
+        "generateReceipt": {
+          "handler": "handler.generateReceipt",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/receipts",
+                "method": "POST"
+              }
+            }
+          ]
+        }
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "custom": {
+        "serverless-offline": {
+          "noPrependStageInUrl": true
+        }
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs20.x",
+      "stage": "dev",
+      "region": "af-south-1",
+      "environment": {
+        "NODE_ENV": "development",
+        "DEFAULT_CURRENCY": "KES"
+      }
+    },
+    "error": {
+      "message": "Unable to reach the Serverless API (fetch failed; code: ETIMEDOUT).\nPlease verify your network connection and try again.",
+      "code": "AUTH_FAILED"
+    },
+    "serviceRawFile": "service: kijani-receipts\n\nprovider:\n  name: aws\n  runtime: nodejs20.x\n  stage: dev\n  region: af-south-1\n  environment:\n    NODE_ENV: development\n    DEFAULT_CURRENCY: KES\n\nfunctions:\n  generateReceipt:\n    handler: handler.generateReceipt\n    events:\n      - httpApi:\n          path: /receipts\n          method: POST\n\nplugins:\n  - serverless-offline\n\ncustom:\n  serverless-offline:\n    noPrependStageInUrl: true",
+    "command": [
+      "offline"
+    ],
+    "options": {},
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}

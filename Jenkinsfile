@@ -168,12 +168,12 @@ pipeline {
                 }
             }
         } 
-
+        
         stage('Deploy Serverless Staging') {
             steps {
-                echo "Deploying serverless stack to staging..."
+                echo "Generating serverless staging configuration..."
 
-                dir('../kijani-serverless/kk-receipts') {
+                dir('serverless/kk-receipts') {
                     sh '''
                         set -e
 
@@ -182,15 +182,13 @@ pipeline {
                         npx serverless print \
                         --stage staging \
                         --format yaml > serverless-staging.yaml
-
-                        echo "Serverless staging configuration generated."
                     '''
                 }
 
-                archiveArtifacts artifacts: '../kijani-serverless/kk-receipts/serverless-staging.yaml',
+                archiveArtifacts artifacts: 'serverless/kk-receipts/serverless-staging.yaml',
                                 fingerprint: true
 
-                echo "Staging deployment verification archived."
+                echo "Serverless staging verification completed."
             }
         }
         

@@ -1,0 +1,106 @@
+service: kijani-receipts
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: dev
+  region: af-south-1
+  environment:
+    NODE_ENV: development
+    DEFAULT_CURRENCY: KES
+    S3_ENDPOINT: http://localhost:4569
+
+plugins:
+  - serverless-offline
+  - serverless-s3-local
+
+custom:
+  receiptsBucket: kk-payments-receipts-${self:provider.stage}
+  processorBucket: kk-receipts-processed-${self:provider.stage}
+  notifierBucket: kk-notifications-queue-${self:provider.stage}
+  analyticsBucket: kk-analytics-output-${self:provider.stage}
+  s3:
+    host: localhost
+    port: 4569
+    directory: /tmp/kijani-s3-local
+
+  serverless-offline:
+    httpPort: 3000
+    lambdaPort: 3002
+    noPrependStageInUrl: true
+
+functions:
+  generateReceipt:
+    handler: handlers/receipts.generate
+    description: Generate a receipt and queue it for processing
+    environment:
+      OUTPUT_BUCKET: ${self:custom.processorBucket}
+    events:
+      - httpApi:
+          path: /receipts
+          method: POST
+
+  processReceiptUpload:
+    handler: handlers/processor.process
+    description: Process uploaded receipt files
+    timeout: 30
+    memorySize: 256
+    environment:
+      NOTIFIER_BUCKET: ${self:custom.notifierBucket}
+    events:
+      - s3:
+          bucket: ${self:custom.receiptsBucket}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: receipt-
+            - suffix: .json
+          existing: false
+
+  notifyReceipt:
+    handler: handlers/notifier.notify
+    description: Log receipt notifications
+    environment:
+      NOTIFICATION_CHANNEL: log
+    events:
+      - s3:
+          bucket: ${self:custom.processorBucket}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: processed-
+            - suffix: .json
+          existing: false
+
+  analyticsSummary:
+    handler: handlers/analytics.aggregate
+    description: Aggregate receipt analytics
+    timeout: 30
+    memorySize: 256
+    events:
+      - s3:
+          bucket: ${self:custom.notifierBucket}
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .json
+          existing: false
+
+resources:
+  Resources:
+    ReceiptsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.receiptsBucket}
+
+    ProcessorBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.processorBucket}
+
+    NotifierBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.notifierBucket}
+    AnalyticsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.analyticsBucket}
+  
