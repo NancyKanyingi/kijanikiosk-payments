@@ -13,7 +13,7 @@ pipeline {
         APP_NAME  = 'kijanikiosk-payments'
        
         NEXUS_URL = 'http://nexus:8081/repository/npm-kijanikiosk/'
-       
+       KUBECONFIG = '/var/jenkins_home/.kube/config'
     }
 
     options {
