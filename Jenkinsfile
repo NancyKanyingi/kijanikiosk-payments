@@ -2,8 +2,12 @@ pipeline {
     agent {
         docker {
             image 'kijanikiosk-ci-agent:1.0'
-            args '-u root --network kijanikiosk-net'
-
+             args '''
+            -u root
+            --network kijanikiosk-net
+            -v /home/nancy/.kube:/root/.kube:ro
+            -v /home/nancy/.minikube:/root/.minikube:ro
+        '''
         }
     }
 
@@ -13,7 +17,7 @@ pipeline {
         APP_NAME  = 'kijanikiosk-payments'
        
         NEXUS_URL = 'http://nexus:8081/repository/npm-kijanikiosk/'
-       KUBECONFIG = '/var/jenkins_home/.kube/config'
+        KUBECONFIG = '/root/.kube/config'
     }
 
     options {
