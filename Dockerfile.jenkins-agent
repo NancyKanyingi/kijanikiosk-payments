@@ -1,7 +1,16 @@
-FROM node:22-alpine
+FROM node:22-bullseye
 
-RUN apk add --no-cache \
-    docker-cli \
-    git
+USER root
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y \
+    git \
+    docker.io \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/v1.35.1/bin/linux/amd64/kubectl" && \
+    install -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
+
+WORKDIR /workspace
