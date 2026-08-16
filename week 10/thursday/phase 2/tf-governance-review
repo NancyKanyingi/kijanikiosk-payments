@@ -1,0 +1,22 @@
+# AI-Generated Terraform Governance Review
+
+Project: KijaniKiosk Payment Receipts S3 Bucket
+
+Reviewer: Nancy Wangui Kanyingi
+
+Date: 2026-08-14
+
+## Governance Review Checklist
+
+| Control | Pass / Fail | Finding | Remediation |
+|---------|-------------|---------|-------------|
+| 1. Least privilege | Fail | The IAM policy grants `s3:` on `*`, giving unrestricted access to all S3 buckets in the AWS account. | Replace the policy with only the required actions (`s3:GetObject`, `s3:PutObject`, `s3:ListBucket`) and scope the `Resource` to `aws_s3_bucket.payment_receipts.arn` and `"${aws_s3_bucket.payment_receipts.arn}/*"`. |
+| 2. Encryption at rest and in transit| Fail | The S3 bucket has no server-side encryption configuration and no policy enforcing HTTPS access. | Add an `aws_s3_bucket_server_side_encryption_configuration` resource with `sse_algorithm = "AES256"` (or AWS KMS), and add an S3 bucket policy that denies requests where `aws:SecureTransport` is `false`. |
+| 3. No hardcoded secrets | Fail | The Lambda function contains `DB_PASSWORD = "kijani-prod-password-2024"`, exposing a production credential in Terraform code. | Replace `DB_PASSWORD` with `var.db_password`, add `variable "db_password" { type = string, sensitive = true }` in `variables.tf`, and retrieve the value from AWS Secrets Manager or a `.tfvars` file excluded from Git using `.gitignore`. |
+| 4. Naming and tagging | Fail | The bucket name `my-payment-receipts-bucket` is generic and the resources contain no organisational tags. | Rename the bucket to `kijanikiosk-prod-payment-receipts` and add required tags: `Owner`, `Environment`, `CostCentre`, and `Project` using the `tags` attribute. |
+| 5. Auditability and logging | Fail | No S3 access logging or CloudTrail configuration exists, so access to payment receipt files cannot be audited. | Add an `aws_s3_bucket_logging` resource that writes access logs to a dedicated logging bucket, and enable CloudTrail data events for the payment receipts bucket. |
+| 6. Data classification and residency | Fail | The provider is hardcoded to `us-east-1`, which may not comply with KijaniKiosk's East African payment data residency requirements. | Replace `region = "us-east-1"` with `region = var.aws_region`, define `variable "aws_region"`, and set the production value to the organisation's approved deployment region. |
+
+## Summary
+
+All six governance controls fail because the AI-generated Terraform prioritises functionality over production security and governance. Each finding has been reviewed and paired with a specific Terraform remediation before approval for production.
